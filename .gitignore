@@ -1,0 +1,10 @@
+# Project exclude paths
+/out/
+/target/
+Maven*
+.idea/*
+*.db
+*.xml
+*.iml
+*/test/*
+/src/main/java/com/gmail/damianmajcherq/tspd/test/

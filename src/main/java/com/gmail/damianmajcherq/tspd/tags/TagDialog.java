@@ -3,11 +3,9 @@ package com.gmail.damianmajcherq.tspd.tags;
 import com.gmail.damianmajcherq.tspd.awt.SimpleTableModel;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -60,11 +58,12 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
 
     private Container initRight() {
         this.tags = new ArrayList<>();
+        this.tags = this.sqlTag.getAllTags();
         this.tabelModel = new SimpleTableModel(new String[]{"nr","tag"},new Class[]{Integer.class,String.class}) {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0)
-                    return columnIndex;
+                    return rowIndex;
                 return tags.get(rowIndex);//TODO referencje
             }
 
@@ -74,6 +73,15 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
             }
         };
         this.table = new JTable(this.tabelModel);
+        this.table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+            }
+        });
+        TableColumn column = this.table.getColumn(0);
+        column.setPreferredWidth(50);
+        column.setMaxWidth(50);
         JScrollPane scroll = new JScrollPane(this.table);
         return scroll;
     }

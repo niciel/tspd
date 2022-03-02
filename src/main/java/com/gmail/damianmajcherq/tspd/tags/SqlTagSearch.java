@@ -50,12 +50,12 @@ public class SqlTagSearch extends SqlModule {
             catch (SQLException e){e.printStackTrace();}
         }
         catch (SQLException e){e.printStackTrace();}
-        return null;
+        return list;
     }
 
     private void readTags(List<String> list , ResultSet res) throws SQLException {
         while (res.next()) {
-            list.add(res.getString(1));
+            list.add(res.getString(2));
         }
     }
 

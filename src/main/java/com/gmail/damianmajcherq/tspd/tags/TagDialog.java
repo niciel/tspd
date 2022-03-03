@@ -33,27 +33,11 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
         JPanel frame = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         layout.columnWeights = new double[]{0.5d,0.5d};
-        layout.rowWeights = new double[]{1d};
+        layout.rowWeights = new double[]{0.1d,0.8d,0.1d};
         frame.setLayout(layout);
 
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridy = 0;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1;
-        Container c = initLeft();
-        c.setPreferredSize(new Dimension(250,400));
-        frame.add(c, constraints);
-
-        constraints.gridy = 0;
-        constraints.gridx = 1;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1;
-        c = initRight();
-        c.setPreferredSize(new Dimension(250,400));
-
-        frame.add(c, constraints);
-
+        initLeft(frame);
+        initRight(frame);
 
         getContentPane().add(frame);
         pack();
@@ -62,8 +46,13 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
 
     }
 
+    private void initRight(JPanel frame) {
 
-    private Container initRight() {
+//        TODO
+    }
+
+
+    private Container createTagTable() {
         this.tags = new ArrayList<>();
         this.tags = this.sqlTag.getAllTags();
         this.tabelModel = new SimpleTableModel(new String[]{"nr","tag"},new Class[]{Integer.class,String.class}) {
@@ -80,6 +69,8 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
             }
         };
         this.table = new JTable(this.tabelModel);
+        this.table.setDragEnabled(true);
+
         this.table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -103,29 +94,70 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
 
     private JButton bottomAdd;
     private JTextField textSearch;
+    private JTextPane foundInfo;
 
-    protected Container initLeft() {
+    protected void initLeft(JPanel frame) {
         Container c = new Container();
-        c.setLayout(new BorderLayout());
+        c.setLayout(new FlowLayout());
         JTextPane text = new JTextPane();
         text.setText("search:");
         text.setEditable(false);
-        c.add(text,BorderLayout.LINE_START);
+        c.add(text);
+
 
         JTextField textField = new JTextField();
-        textField.setPreferredSize(new Dimension(100,text.getHeight()));
         this.textSearch = textField;
-        textField.setColumns(1);
+        textField.setColumns(20);
         textField.addKeyListener(this);
-        c.add(textField,BorderLayout.CENTER);
+        c.add(textField);
+
+        this.foundInfo = new JTextPane();
+        this.foundInfo.setEditable(false);
+        c.add(this.foundInfo);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        frame.add(c,constraints);
+
+
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        frame.add(createTagTable() , constraints);
+
 
         this.bottomAdd = new JButton("add");
         this.bottomAdd.addActionListener(this);
         this.bottomAdd.setActionCommand("addNewTag");
-        c.add(this.bottomAdd,BorderLayout.PAGE_END);
-        return c;
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        frame.add(this.bottomAdd,constraints);
+
     }
 
+
+    protected void updateTableContnet(){
+        String tag = this.textSearch.getText();
+        if (tag != null && tag.isEmpty() == false) {
+            if (Pattern.matches("[a-zA-Z0-9]+",tag)){
+                this.tags = this.sqlTag.SearchTags(tag);
+                this.tabelModel.fireTableDataChanged();
+            }
+            else {
+                this.textSearch.setText("");
+            }
+        }
+        else {
+            this.tags = this.sqlTag.getAllTags();
+            this.tabelModel.fireTableDataChanged();
+        }
+//        TODO get table size;
+        this.foundInfo.setText(tags.size()+"/NaN" );
+    }
 
 
     @Override
@@ -137,16 +169,14 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
                 if (tag != null && tag.isEmpty() == false && Pattern.matches("[a-zA-Z0-9]+",tag)) {
                     if (this.tags.stream().filter(f-> !f.equalsIgnoreCase(tag)).findAny().isEmpty()) {
                         this.sqlTag.addTag(tag);
-                        this.tags = this.sqlTag.SearchTags(tag);
-                        this.tabelModel.fireTableDataChanged();
+                        updateTableContnet();
                     }
                 }
                 break;
             }
             case ("removeTag") : {
                 this.sqlTag.removeTag(this.tags.get(selectedRow));
-                this.tags = this.sqlTag.getAllTags();
-                this.tabelModel.fireTableDataChanged();
+                this.updateTableContnet();
                 break;
             }
         }
@@ -161,24 +191,6 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
 
     @Override
     public void keyReleased(KeyEvent e) {
-        //TOTO
-        String to = this.textSearch.getText();
-        if (to != null && to.isEmpty() == false) {
-            if (Pattern.matches("[a-zA-Z0-9]+",to)) {
-                this.tags = this.sqlTag.SearchTags(to);
-                if (tags == null) {
-//                    TODO error on sql query close program ?
-                    this.tags = new ArrayList<>();
-                }
-            }
-            else {
-                //TODO some kind of check validation
-                this.tags = new ArrayList<>();
-            }
-        }
-        else {
-            this.tags = sqlTag.getAllTags();
-        }
-        this.tabelModel.fireTableDataChanged();
+        this.updateTableContnet();
     }
 }

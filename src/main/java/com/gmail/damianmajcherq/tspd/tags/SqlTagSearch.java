@@ -110,8 +110,11 @@ public class SqlTagSearch extends SqlModule {
                     ");";
             st.execute(statement);
 
-            statement = "CREATE TABLE IF NOT EXISTS tag_ins (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT" +
+
+            statement = "CREATE TABLE IF NOT EXISTS tag_group (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name char(64)," +
+                    "table char(64)" +
                     ");";
             st.execute(statement);
 

@@ -15,9 +15,6 @@ public class SqLiteManagement {
         this.DBFile = new File(DBFolder , "tspd.db");
     }
 
-    public Collection<REmployed> GetEmployeds() {
-        return null;
-    }
 
 
     public void initSqlDatabase() {
@@ -48,39 +45,7 @@ public class SqLiteManagement {
         }
     }
 
-    /***
-     *  should create temporal table with 0 elements, with copied columns from existing table
-     * @param existing
-     * @param tempName
-     * @return
-     */
-    public boolean createTempTable(String existing, String tempName)  {
-        try (Statement statement = getConnection().createStatement()) {
-            statement.execute("CREATE TEMP TABLE IF NOT EXISTS " + tempName + " AS SELECT ALL * FROM "+ existing + " WHERE (1=2)" );
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
 
-    /***
-     * should create temporal table with 0 elements, with copied columns from existing table
-     * @param existing
-     * @param tempName
-     * @return
-     */
-    public boolean createTempTableIndexed(String existing, String tempName)  {
-        try (Statement statement = getConnection().createStatement()) {
-            statement.execute("CREATE TEMP TABLE IF NOT EXISTS " + tempName + " AS SELECT ALL * FROM "+ existing + " WHERE (1=2)" );
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
 
     public Connection getConnection() throws SQLException {
         try {

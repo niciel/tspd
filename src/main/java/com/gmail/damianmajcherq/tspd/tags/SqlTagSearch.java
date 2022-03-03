@@ -80,13 +80,23 @@ public class SqlTagSearch extends SqlModule {
         try (Connection con = this.sql.getConnection();
             PreparedStatement st = con.prepareStatement("INSERT INTO tag (id,tag) VALUES (NULL,?)");){
             st.setString(1,tag);
-            st.execute();
+            try {
+                st.execute();
+            } catch(SQLException e2){}
             return true;
         }catch (SQLException e){e.printStackTrace();}
         return false;
     }
 
-
+    public boolean removeTag(String tag) {
+        String st = "DELETE FROM tag WHERE tag = ?";
+        try (Connection con = sql.getConnection();
+            PreparedStatement ps = con.prepareStatement(st);)   {
+            ps.setString(1,tag);
+            return ps.execute();
+        }catch (SQLException e){e.printStackTrace();}
+        return false;
+    }
 
     public void init() {
         try {

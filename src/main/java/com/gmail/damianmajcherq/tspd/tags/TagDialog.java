@@ -15,12 +15,19 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
     private List<String> tags;
     private SimpleTableModel tabelModel;
     private JTable table;
-
+    private JPopupMenu editMenu;
     private SqlTagSearch sqlTag;
+
+    private int selectedRow = 0;
 
     public TagDialog(Frame parent , SqlTagSearch sql) {
         super(parent,"tag editor" , true);
         this.sqlTag = sql;
+        this.editMenu = new JPopupMenu();
+        JMenuItem removeItem = new JMenuItem("Remove");
+        removeItem.setActionCommand("removeTag");
+        removeItem.addActionListener(this);
+        this.editMenu.add(removeItem);
         Point loc = parent.getLocation();
         setLocation(loc.x+80,loc.y+80);
         JPanel frame = new JPanel();
@@ -77,9 +84,16 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    int row = table.rowAtPoint(e.getPoint());
+                    if (row >= 0 && row < table.getRowCount()) {
+                        selectedRow = row;
+                        editMenu.show(e.getComponent(),e.getX()+10,e.getY());
+                    }
+                }
             }
         });
-        TableColumn column = this.table.getColumn(0);
+        TableColumn column = this.table.getColumn("nr");
         column.setPreferredWidth(50);
         column.setMaxWidth(50);
         JScrollPane scroll = new JScrollPane(this.table);
@@ -121,11 +135,18 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
             case ("addNewTag") : {
                 String tag = this.textSearch.getText();
                 if (tag != null && tag.isEmpty() == false && Pattern.matches("[a-zA-Z0-9]+",tag)) {
-                    System.out.println("size " + this.tags.size());
-                    this.tags.add(tag);
-                    this.sqlTag.addTag(tag);
-                    this.tabelModel.fireTableDataChanged();
+                    if (this.tags.stream().filter(f-> !f.equalsIgnoreCase(tag)).findAny().isEmpty()) {
+                        this.sqlTag.addTag(tag);
+                        this.tags = this.sqlTag.SearchTags(tag);
+                        this.tabelModel.fireTableDataChanged();
+                    }
                 }
+                break;
+            }
+            case ("removeTag") : {
+                this.sqlTag.removeTag(this.tags.get(selectedRow));
+                this.tags = this.sqlTag.getAllTags();
+                this.tabelModel.fireTableDataChanged();
                 break;
             }
         }
@@ -144,13 +165,11 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
         String to = this.textSearch.getText();
         if (to != null && to.isEmpty() == false) {
             if (Pattern.matches("[a-zA-Z0-9]+",to)) {
-                System.out.println("serch: '" + to +"'");
                 this.tags = this.sqlTag.SearchTags(to);
                 if (tags == null) {
 //                    TODO error on sql query close program ?
                     this.tags = new ArrayList<>();
                 }
-                System.out.println("size " + this.tags.size());
             }
             else {
                 //TODO some kind of check validation

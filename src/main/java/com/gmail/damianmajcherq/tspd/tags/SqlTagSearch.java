@@ -2,6 +2,8 @@ package com.gmail.damianmajcherq.tspd.tags;
 
 import com.gmail.damianmajcherq.tspd.SqLiteManagement;
 import com.gmail.damianmajcherq.tspd.SqlModule;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,15 +17,7 @@ public class SqlTagSearch extends SqlModule {
     }
 
 
-    public void removeTagGroup(Connection con , int tagGroup) {
-        try (PreparedStatement ps = con.prepareStatement("DELETE FROM tag_ins WHERE (id = ?)")){
-            ps.setInt(1,tagGroup);
-            ps.execute();
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
+
 
 
     public List<String> getAllTags(){
@@ -55,15 +49,43 @@ public class SqlTagSearch extends SqlModule {
 
     private void readTags(List<String> list , ResultSet res) throws SQLException {
         while (res.next()) {
-            list.add(res.getString(2));
+            list.add(res.getString("tag"));
         }
     }
 
 
+    public @NotNull List<String> getTags(@NotNull int group) {
+        String statement = "SELECT (tag) FROM tag WHERE tag.id = " +
+                "(SELECT tag FROM tags WHERE  tags.id = ? LIMIT 1)" +
+                ");";
+        List<String> list = new ArrayList<>();
+        try (Connection connection = sql.getConnection();
+            PreparedStatement ps = connection.prepareStatement(statement)) {
+            ps.setInt(1,group);
+            ResultSet rs = ps.executeQuery();
+            readTags(list,rs);
+        }
+        catch (SQLException e) {e.printStackTrace();}
+        return list;
+    }
+
+    @Deprecated
+    //TODO
+    public void removeTagGroup(@NotNull Connection con , int tagGroup) {
+        try (PreparedStatement ps = con.prepareStatement("DELETE FROM tag_ins WHERE (id = ?)")){
+            ps.setInt(1,tagGroup);
+            ps.execute();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    @Deprecated
+    //TODO
     public int registerNewTagGroup(Connection con) {
         try (Statement st = con.createStatement()) {
             st.execute("INSERT INTO tag_ins VALUES (NULL)");
-            try (   PreparedStatement ps = con.prepareStatement("sqlite3_last_insert_rowid()");
+            try (   PreparedStatement ps = con.prepareStatement("SELECT id AS sqlite3_last_insert_rowid()");
                     ResultSet set = ps.executeQuery();
             ) {
                 set.next();
@@ -113,15 +135,14 @@ public class SqlTagSearch extends SqlModule {
 
             statement = "CREATE TABLE IF NOT EXISTS tag_group (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name char(64)," +
-                    "table char(64)" +
+                    "table char(64) NOT NULL" +
                     ");";
             st.execute(statement);
 
             statement = "CREATE TABLE IF NOT EXISTS tags (" +
                     "id int NOT NULL," +
                     "tag int NOT NULL," +
-                    "FOREIGN KEY (id) REFERENCES tag_ins(id) ON DELETE CASCADE, " +
+                    "FOREIGN KEY (id) REFERENCES tag_group(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (tag) REFERENCES tag(id) ON DELETE CASCADE" +
                     ");";
             st.execute(statement);

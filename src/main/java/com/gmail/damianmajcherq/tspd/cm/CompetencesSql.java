@@ -27,39 +27,25 @@ public class CompetencesSql {
 
 
 
-            statement = "CREATE TABLE IF NOT EXISTS rq_group_info (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "tags char(64) NOT NULL," +
-                    "description char(256)" +
-                    ");";
-            st.execute(statement);
 
-            statement = "CREATE TABLE IF NOT EXISTS requirements (" +
+            statement = "CREATE TABLE IF NOT EXISTS requirement (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "tags char(128)," +
+                    "name char(64)," +
                     "description char(256)," +
-                    "req_group int," +
-                    "FOREIGN KEY (req_group) REFERENCES rq_group_info(id) ON DELETE SET NULL" +
+                    "UNIQUE (name)" +
                     ");";
             st.execute(statement);
 
-            statement = "CREATE TABLE IF NOT EXISTS rq_groups (" +
-                    "id_group int NOT NULL," +
-                    "id_req int NOT NULL," +
-                    "FOREIGN KEY (id_group) REFERENCES rq_group_info(id) ON DELETE CASCADE," +
-                    "FOREIGN KEY (id_req) REFERENCES requirements(id) ON DELETE CASCADE" +
+
+            statement = "CREATE TABLE IF NOT EXISTS req_group (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name char(64) UNIQUE NOT NULL," +
+                    "parent INTEGER" +
                     ");";
             st.execute(statement);
 
-            statement = "CREATE TABLE IF NOT EXISTS knowledge (" +
-                    "id_e int NOT NULL," +
-                    "req int NOT NULL," +
-                    "level real," +
-                    "extra varchar(128)," +
-                    "FOREIGN KEY (id_e) REFERENCES employed(id) ON DELETE CASCADE," +
-                    "FOREIGN KEY (req) REFERENCES requirements(id) ON DELETE CASCADE" +
-                    ");";
-            st.execute(statement);
+
+
 
 
         } catch (SQLException e) {

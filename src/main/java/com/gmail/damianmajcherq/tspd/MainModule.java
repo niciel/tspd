@@ -1,6 +1,7 @@
 package com.gmail.damianmajcherq.tspd;
 
 import com.gmail.damianmajcherq.tspd.cm.CompetenceMatrix;
+import com.gmail.damianmajcherq.tspd.production.ProductionModule;
 import com.gmail.damianmajcherq.tspd.tags.TagModule;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class MainModule {
         this.modules = new ArrayList<>();
         this.modules.add(new CompetenceMatrix());
         this.modules.add(new TagModule());
+        this.modules.add(new ProductionModule());
     }
 
 

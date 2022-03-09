@@ -132,7 +132,7 @@ public class SqlTagSearch extends SqlModule {
                     ");";
             st.execute(statement);
 
-
+            /*
             statement = "CREATE TABLE IF NOT EXISTS tag_group (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "table char(64) NOT NULL" +
@@ -146,7 +146,7 @@ public class SqlTagSearch extends SqlModule {
                     "FOREIGN KEY (tag) REFERENCES tag(id) ON DELETE CASCADE" +
                     ");";
             st.execute(statement);
-
+*/
 
 
         } catch (SQLException e) {

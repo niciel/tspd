@@ -35,6 +35,9 @@ public class SqlProduction {
             st.execute(statement);
 
 
+
+
+
             statement = "CREATE TABLE IF NOT EXISTS products (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "name char(64) UNIQUE" +

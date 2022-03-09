@@ -1,7 +1,7 @@
 package com.gmail.damianmajcherq.tspd.tags;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
-import com.gmail.damianmajcherq.tspd.MainModule;
+import com.gmail.damianmajcherq.tspd.MainSystem;
 
 import javax.swing.*;
 
@@ -11,18 +11,18 @@ public class TagModule implements ITSPDModule {
     private SqlTagSearch sql;
 
     @Override
-    public void preStart(MainModule main) {
+    public void preStart(MainSystem main) {
         this.sql = new SqlTagSearch(main.GetSqlManagement());
         this.sql.init();
     }
 
     @Override
-    public void onStart(MainModule main) {
+    public void onStart(MainSystem main) {
         
     }
 
     @Override
-    public void initFrames(MainModule main) {
+    public void initFrames(MainSystem main) {
         JMenuItem item = new JMenuItem("tag editor");
         main.registerModuleMenuItem(item);
         item.addActionListener( e-> {

@@ -6,11 +6,10 @@ import com.gmail.damianmajcherq.tspd.tags.TagModule;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainModule {
+public class MainSystem {
 
 
     private SqLiteManagement sql;
@@ -22,7 +21,7 @@ public class MainModule {
     private JMenu modulesMenu;
     private JMenuBar menuBar;
 
-    public MainModule (){
+    public MainSystem(){
         this.modules = new ArrayList<>();
         this.modules.add(new CompetenceMatrix());
         this.modules.add(new TagModule());
@@ -55,22 +54,10 @@ public class MainModule {
         this.mainFrame.add(this.tabPane);
 
 
-
-
-
-
-
-
         for (ITSPDModule m : this.modules)
             m.initFrames(this);
 
-
-
         tabPane.addTab("test2",new JPanel());
-
-
-
-
 
         this.mainFrame.setVisible(true);
 

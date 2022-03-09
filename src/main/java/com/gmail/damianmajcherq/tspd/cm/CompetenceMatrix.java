@@ -1,7 +1,7 @@
 package com.gmail.damianmajcherq.tspd.cm;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
-import com.gmail.damianmajcherq.tspd.MainModule;
+import com.gmail.damianmajcherq.tspd.MainSystem;
 import com.gmail.damianmajcherq.tspd.awt.SqlCellRenderer;
 
 import javax.swing.*;
@@ -15,17 +15,17 @@ import java.awt.*;
 public class CompetenceMatrix implements ITSPDModule {
 
     @Override
-    public void preStart(MainModule main) {
+    public void preStart(MainSystem main) {
 
     }
 
     @Override
-    public void onStart(MainModule main) {
+    public void onStart(MainSystem main) {
 
     }
 
     @Override
-    public void initFrames(MainModule main) {
+    public void initFrames(MainSystem main) {
         Container c = initCompetenceTabPane();
         main.registerTabPane("competences", c, null);
     }

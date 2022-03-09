@@ -1,31 +1,29 @@
 package com.gmail.damianmajcherq.tspd.production;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
-import com.gmail.damianmajcherq.tspd.MainModule;
+import com.gmail.damianmajcherq.tspd.MainSystem;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import java.awt.*;
 
 public class ProductionModule implements ITSPDModule {
 
 
     @Override
-    public void preStart(MainModule main) {
+    public void preStart(MainSystem main) {
         SqlProduction sqp = new SqlProduction(main.GetSqlManagement());
         sqp.init();
     }
 
     @Override
-    public void onStart(MainModule main) {
+    public void onStart(MainSystem main) {
 
     }
 
     @Override
-    public void initFrames(MainModule main) {
+    public void initFrames(MainSystem main) {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(new TreeNodeData());
         TreeModel model = new DefaultTreeModel(root){

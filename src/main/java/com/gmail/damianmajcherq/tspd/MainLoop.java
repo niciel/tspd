@@ -6,8 +6,6 @@ import com.gmail.damianmajcherq.tspd.cm.CompetencesSql;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.sql.*;
-import java.util.ArrayList;
 
 
 public class MainLoop {
@@ -15,13 +13,13 @@ public class MainLoop {
     private static File ExecutionFolder;
 
 
-    private static MainModule MAIN;
+    private static MainSystem MAIN;
 
 
     public static void main(String args[]){
         System.out.println(System.getenv("APPDATA"));
         //MainLoop loop = new MainLoop();
-        MAIN = new MainModule();
+        MAIN = new MainSystem();
         ExecutionFolder = new File("").getAbsoluteFile();
         MAIN.init(new SqLiteManagement(ExecutionFolder));
 

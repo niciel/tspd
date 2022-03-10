@@ -29,20 +29,6 @@ public class SqLiteManagement {
 //            TODO
             System.out.println("exxception " + e);
         }
-
-        try (Statement st = getConnection().createStatement()) {
-            String statement = "CREATE TABLE IF NOT EXISTS employed (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "sys_id int UNIQUE NOT NULL," +
-                    "name char(32) NOT NULL," +
-                    "s_name char(32) NOT NULL," +
-                    "job_start DATE NOT NULL" +
-                    ");";
-            st.execute(statement);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 

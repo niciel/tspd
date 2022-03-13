@@ -1,22 +1,20 @@
 package com.gmail.damianmajcherq.tspd;
 
 import javax.swing.*;
-import java.awt.*;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.function.Consumer;
 
 public class MainModule implements ITSPDModule {
 
 
     private SqLiteManagement sql;
 
-    public MainModule(SqLiteManagement sql) {
-        this.sql = sql;
-    }
 
     @Override
     public void preStart(MainSystem main) {
-        try (Statement st = sql.getConnection().createStatement()) {
+        this.sql = main.getSqlManagement();
+        try (Connection connection = sql.getConnection();
+                Statement st = connection.createStatement()) {
 
             String statement = "CREATE TABLE IF NOT EXISTS employed (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -28,6 +26,7 @@ public class MainModule implements ITSPDModule {
             st.execute(statement);
 
             statement = "CREATE TABLE IF NOT EXISTS e_groups (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "gid BIGINT NOT NULL UNIQUE," +
                     "name char(32) NOT NULL," +
                     "deep int(1) NOT NULL" +
@@ -41,6 +40,33 @@ public class MainModule implements ITSPDModule {
             e.printStackTrace();
         }
     }
+    private static final long STRONG_FULL = 0xffffffff;
+    private int XFactor = 4; //bigint 64, 2^XFactor = maxIloscGalezi (16), 64/XFactor = maxGlebokosc (16)
+
+    public ResultSet getParents(long gidChild , int deep , Consumer<ResultSet> action) {
+        if (deep == 0) {
+
+        }
+        else {
+            long mask = STRONG_FULL >> (64-XFactor*deep);
+            long branch = mask & gidChild;
+            String statement = "SELECT * FROM e_groups WHERE(" +
+                    "? & gid = ?" +
+                    ");";
+            try (Connection connection = sql.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(statement)) {
+                ps.setLong(1,mask);
+                ps.setLong(2,branch);
+                return ps.executeQuery();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
 
     @Override
     public void onStart(MainSystem main) {

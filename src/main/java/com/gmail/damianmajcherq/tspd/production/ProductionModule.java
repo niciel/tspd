@@ -13,7 +13,7 @@ public class ProductionModule implements ITSPDModule {
 
     @Override
     public void preStart(MainSystem main) {
-        SqlProduction sqp = new SqlProduction(main.GetSqlManagement());
+        SqlProduction sqp = new SqlProduction(main.getSqlManagement());
         sqp.init();
     }
 

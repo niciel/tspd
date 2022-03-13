@@ -23,9 +23,11 @@ public class MainSystem {
 
     public MainSystem(){
         this.modules = new ArrayList<>();
+        this.modules.add(new MainModule());
         this.modules.add(new CompetenceMatrix());
         this.modules.add(new TagModule());
         this.modules.add(new ProductionModule());
+
     }
 
 
@@ -63,7 +65,7 @@ public class MainSystem {
 
     }
 
-    public SqLiteManagement GetSqlManagement(){
+    public SqLiteManagement getSqlManagement(){
         return this.sql;
     }
 

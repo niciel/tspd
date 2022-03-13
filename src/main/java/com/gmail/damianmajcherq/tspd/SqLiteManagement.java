@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public class SqLiteManagement {
 
@@ -47,8 +48,6 @@ public class SqLiteManagement {
         this.lastCreatedConnection = DriverManager.getConnection("jdbc:sqlite:"+DBFile.getAbsolutePath());
         return this.lastCreatedConnection;
     }
-
-
 
 
 }

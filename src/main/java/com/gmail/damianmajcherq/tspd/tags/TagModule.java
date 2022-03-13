@@ -12,7 +12,7 @@ public class TagModule implements ITSPDModule {
 
     @Override
     public void preStart(MainSystem main) {
-        this.sql = new SqlTagSearch(main.GetSqlManagement());
+        this.sql = new SqlTagSearch(main.getSqlManagement());
         this.sql.init();
     }
 

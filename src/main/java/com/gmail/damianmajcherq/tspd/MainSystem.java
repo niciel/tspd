@@ -23,7 +23,7 @@ public class MainSystem {
 
     public MainSystem(){
         this.modules = new ArrayList<>();
-        this.modules.add(new MainModule());
+        this.modules.add(new SqlMainModule());
         this.modules.add(new CompetenceMatrix());
         this.modules.add(new TagModule());
         this.modules.add(new ProductionModule());

@@ -24,7 +24,6 @@ public class ProductionModule implements ITSPDModule {
 
     @Override
     public void initFrames(MainSystem main) {
-
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(new TreeNodeData());
         TreeModel model = new DefaultTreeModel(root){
 

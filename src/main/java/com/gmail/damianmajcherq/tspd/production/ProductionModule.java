@@ -30,6 +30,7 @@ public class ProductionModule implements ITSPDModule {
         };
         root.add(new DefaultMutableTreeNode(":O nie tym razem"));
         JTree tree = new JTree(model);
+        tree.setCellRenderer(new ProductionTreeRenderer());
         JPanel container = new JPanel();
         container.add(tree);
         main.registerTabPane("employed", container, null);

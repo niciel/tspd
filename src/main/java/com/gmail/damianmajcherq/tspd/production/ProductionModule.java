@@ -24,14 +24,11 @@ public class ProductionModule implements ITSPDModule {
 
     @Override
     public void initFrames(MainSystem main) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new TreeNodeData());
-        TreeModel model = new DefaultTreeModel(root){
 
-        };
-        root.add(new DefaultMutableTreeNode(":O nie tym razem"));
-        JTree tree = new JTree(model);
-        tree.setCellRenderer(new ProductionTreeRenderer());
+        JTree tree = new JTree();
+        GroupTreeController controller = new GroupTreeController(tree);
         JPanel container = new JPanel();
+
         container.add(tree);
         main.registerTabPane("employed", container, null);
 

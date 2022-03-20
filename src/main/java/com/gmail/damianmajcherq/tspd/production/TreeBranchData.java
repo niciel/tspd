@@ -9,7 +9,9 @@ import java.awt.*;
 public class TreeBranchData {
 
     protected String name;
-    protected int sqlID;
+    protected long sqlID; // full id of parent
+    protected int deep; // for know how deep its is
+
 
 
 

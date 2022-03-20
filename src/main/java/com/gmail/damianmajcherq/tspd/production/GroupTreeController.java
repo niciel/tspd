@@ -15,9 +15,7 @@ public class GroupTreeController implements MouseListener {
 
     public final WeakReference<JTree> tree;
 
-
     private List<ILeafController> leafsController;
-
 
 
     public GroupTreeController(JTree tree) {

@@ -33,6 +33,17 @@ public class SqLiteManagement {
     }
 
 
+    /**
+     *
+     * @param string
+     * @return
+     */
+    public static boolean checkStatement(String string){
+        if (string == null || string.isEmpty())
+            return false;
+        return string.matches("[='\"]");
+    }
+
 
     public Connection getConnection() throws SQLException {
         try {

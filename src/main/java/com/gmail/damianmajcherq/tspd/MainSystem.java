@@ -7,6 +7,8 @@ import com.gmail.damianmajcherq.tspd.tags.TagModule;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MainSystem {
@@ -16,6 +18,7 @@ public class MainSystem {
     private List<ITSPDModule> modules;
     private JTabbedPane tabPane;
     public JFrame mainFrame;
+
 
 
     private JMenu modulesMenu;
@@ -34,17 +37,27 @@ public class MainSystem {
     public void init(SqLiteManagement sql){
         this.sql = sql;
         this.sql.initSqlDatabase();
+
+
+
         for (ITSPDModule m : this.modules)
             m.preStart(this);
-
         initJFrames();
 
     }
 
+    /***
+     * @param permission
+     * @return
+     */
+    public boolean haveAccess(String permission){
+        return true;//TODO future
+    }
+
+
     private void initJFrames(){
 
         this.mainFrame = new JFrame("Tspd");
-
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 

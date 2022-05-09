@@ -26,6 +26,9 @@ public class SqlProduction {
                     "parent int" +
                     ");";
             st.execute(statement);
+
+
+
             statement = "CREATE TABLE IF NOT EXISTS e_groups_r (" +
                     "id int UNIQUE," +
                     "parent int," +

@@ -2,14 +2,19 @@ package com.gmail.damianmajcherq.tspd.cm;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
 import com.gmail.damianmajcherq.tspd.MainSystem;
+import com.gmail.damianmajcherq.tspd.awt.CachedJTable;
+import com.gmail.damianmajcherq.tspd.awt.CachedTableModel;
+import com.gmail.damianmajcherq.tspd.awt.ColumnBehaviour;
 import com.gmail.damianmajcherq.tspd.awt.SqlCellRenderer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CompetenceMatrix implements ITSPDModule {
@@ -88,6 +93,8 @@ public class CompetenceMatrix implements ITSPDModule {
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0)
                     return rowIndex;
+                //if (columnIndex == 1)
+                //System.out.println("get : " + rowIndex) ;
                 return 1;
             }
 
@@ -120,6 +127,33 @@ public class CompetenceMatrix implements ITSPDModule {
 
 
     protected Container InitTable() {
+        List<ColumnBehaviour> list = new ArrayList<ColumnBehaviour>();
+        list.add(new ColumnBehaviour("nr") {
+            @Override
+            public Class getDataType() {
+                return String.class;
+            }
+        });
+
+        CachedTableModel model = new CachedTableModel(100,list) {
+
+            @Override
+            public boolean fetchData(int lowestRow, int highestRow, @NotNull Object[][] data) {
+                //System.out.println("check " + lowestRow + " a " +highestRow);
+                for (int i = lowestRow ; i < highestRow;i++){
+                    data[i] = new Object[]{lowestRow+i};
+                }
+                return true;
+            }
+
+            @Override
+            public int getRowCount() {
+                return 100;
+            }
+        };
+        CachedJTable table = new CachedJTable(model);
+        /*
+
         String[] columns = new String[]{"pierwsza","druga","trzecia"};
         Object[][] data = new Object[][]{
                 {1,2,3},
@@ -134,16 +168,14 @@ public class CompetenceMatrix implements ITSPDModule {
 
         JScrollPane scroll = new JScrollPane(table);
         return scroll;
-        //con.add(new JButton("te"));
+        */
+
+
+        JScrollPane scroll = new JScrollPane(table);
+        return scroll;
     }
 
 
-    protected Container LeftButtonAddGroup(){
-        JButton button = new JButton("add");
-        button.addActionListener( e ->{
-            System.out.println(":D");
-        });
-        return button;
-    }
+
 
 }

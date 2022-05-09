@@ -1,8 +1,7 @@
 package com.gmail.damianmajcherq.tspd.tags;
 
-import com.gmail.damianmajcherq.tspd.awt.SimpleTableModel;
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,7 +12,7 @@ import java.util.regex.Pattern;
 public class TagDialog extends JDialog  implements ActionListener , KeyListener {
 
     private List<String> tags;
-    private SimpleTableModel tabelModel;
+    private DefaultTableModel tabelModel;
     private JTable table;
     private JPopupMenu editMenu;
     private SqlTagSearch sqlTag;
@@ -55,7 +54,9 @@ public class TagDialog extends JDialog  implements ActionListener , KeyListener 
     private Container createTagTable() {
         this.tags = new ArrayList<>();
         this.tags = this.sqlTag.getAllTags();
-        this.tabelModel = new SimpleTableModel(new String[]{"nr","tag"},new Class[]{Integer.class,String.class}) {
+        DefaultTableModel mod = new DefaultTableModel(new String[]{"nr","tag"},10);
+
+        this.tabelModel = new DefaultTableModel(new String[]{"nr","tag"},10) {
             @Override
             public Object getValueAt(int rowIndex, int columnIndex) {
                 if (columnIndex == 0)

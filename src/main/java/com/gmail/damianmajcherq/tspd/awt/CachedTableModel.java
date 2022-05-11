@@ -49,8 +49,9 @@ public abstract class CachedTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+
         if (rowIndex >= this.minRowIndex && rowIndex <= this.maxRowIndex){
-            int index = this.minDataIndex + (this.minRowIndex - rowIndex);
+            int index = this.minDataIndex + (this.minRowIndex + rowIndex);
             if (index > this.rowCountCache) {
                 index = index - this.rowCountCache;
             }
@@ -88,6 +89,19 @@ public abstract class CachedTableModel extends AbstractTableModel {
                 }
                 else {
                     int delta = fetchEnd -fetchStart;
+                    int sign = sign(this.maxDataIndex);
+                    this.maxRowIndex += delta;
+                    this.maxDataIndex += delta;
+                    if (this.maxDataIndex >= this.rowCountCache) {
+                        this.maxDataIndex = (this.maxDataIndex - this.rowCountCache);
+                        //minim is bigger than max thus needs shifting
+                        if (this.maxDataIndex < this.minDataIndex) {
+                            if ((this.maxRowIndex - this.minRowIndex) >= this.rowCountCache){
+                                //przesuniecie
+                                System.out.println("mniejszy ? " +maxRowIndex + ",m " + minRowIndex );
+                            }
+                        }
+                    }
 
                 }
             }
@@ -137,7 +151,7 @@ public abstract class CachedTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return this.columns.get(columnIndex).getDataType();
+        return this.columns.get(columnIndex).dataType;
     }
 
 
@@ -147,4 +161,9 @@ public abstract class CachedTableModel extends AbstractTableModel {
             return this.columns.get(column).name;
         return "";
     }
+
+    protected static int sign(int i) {
+        return ((i & 0x80000000) == 0x80000000) ? -1:1;
+    }
+
 }

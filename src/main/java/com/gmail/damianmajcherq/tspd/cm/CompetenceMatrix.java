@@ -125,22 +125,14 @@ public class CompetenceMatrix implements ITSPDModule {
         this.groupsTable.setFillsViewportHeight(true);
     }
 
-
     protected Container InitTable() {
         List<ColumnBehaviour> list = new ArrayList<ColumnBehaviour>();
-        list.add(new ColumnBehaviour("nr") {
-            @Override
-            public Class getDataType() {
-                return String.class;
-            }
-        });
-
+        list.add(new ColumnBehaviour("nr",Integer.class));
         CachedTableModel model = new CachedTableModel(100,list) {
-
             @Override
             public boolean fetchData(int lowestRow, int highestRow, @NotNull Object[][] data) {
-                //System.out.println("check " + lowestRow + " a " +highestRow);
-                for (int i = lowestRow ; i < highestRow;i++){
+                System.out.println("fetch: " + lowestRow + " hig " + highestRow + " size " +data.length);
+                for (int i = 0 ; i < data.length;i++){
                     data[i] = new Object[]{lowestRow+i};
                 }
                 return true;

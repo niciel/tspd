@@ -19,8 +19,7 @@ public class CachedJTable extends JTable {
 
     @Override
     public TableCellRenderer getCellRenderer(int row, int column) {
-        Object obj = getValueAt(row,column);
-        return super.getCellRenderer(row, column);
+        return renderer;
     }
 
 

@@ -20,15 +20,23 @@ public abstract class CachedTableModel extends AbstractTableModel {
     private List<ColumnBehaviour> columns;
 
     private int rowCountCache =64;
+    private int fetchSize = 10;
+    /** seconds*/
+    private float fetchTimeOut = 1;
 
     private Object[][] dataCache;
 
-    // index of table
+    private int[] toFetch;
+
+
+    /**lower array index of min row from table*/
     private int minDataIndex=0;
-    // index of table row
+    /**lower row from table*/
     private int minRowIndex=-1;
 
+    /** upper array index of max row from table*/
     private int maxDataIndex=0;
+    /** upper row from table*/
     private int maxRowIndex=-1;
 
 
@@ -49,11 +57,16 @@ public abstract class CachedTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-
         if (rowIndex >= this.minRowIndex && rowIndex <= this.maxRowIndex){
             int index = this.minDataIndex + (this.minRowIndex + rowIndex);
             if (index > this.rowCountCache) {
                 index = index - this.rowCountCache;
+            }
+            System.out.println("trafiony " + rowIndex);
+            Object[] data = this.dataCache[index];
+            if (data == null) {
+                System.out.println("NULL");
+                return -1;
             }
             return this.dataCache[index][columnIndex];
         }
@@ -75,12 +88,14 @@ public abstract class CachedTableModel extends AbstractTableModel {
             if (increment) {
                 for(int i = 0 ; i < data.length ; i++) {
                     int cacheIndex = this.maxDataIndex+1+i;
+                    System.out.println("cached " + cacheIndex);
                     if (cacheIndex < this.rowCountCache) {
                         this.dataCache[cacheIndex] = data[i];
                     }
                     else
                         this.dataCache[cacheIndex - this.rowCountCache] = data[i];
                 }
+
                 if (this.minRowIndex < 0) {
                     this.minRowIndex = 0;
                     this.maxRowIndex = fetchEnd-1;
@@ -97,6 +112,7 @@ public abstract class CachedTableModel extends AbstractTableModel {
                         //minim is bigger than max thus needs shifting
                         if (this.maxDataIndex < this.minDataIndex) {
                             if ((this.maxRowIndex - this.minRowIndex) >= this.rowCountCache){
+
                                 //przesuniecie
                                 System.out.println("mniejszy ? " +maxRowIndex + ",m " + minRowIndex );
                             }

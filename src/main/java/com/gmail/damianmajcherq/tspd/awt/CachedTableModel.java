@@ -4,7 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.lang.ref.WeakReference;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 public abstract class CachedTableModel extends AbstractTableModel {
@@ -18,16 +19,12 @@ public abstract class CachedTableModel extends AbstractTableModel {
      */
 
     private List<ColumnBehaviour> columns;
+    private Timer syncRepeating;
+
 
     private int rowCountCache =64;
-    private int fetchSize = 10;
-    /** seconds*/
-    private float fetchTimeOut = 1;
 
     private Object[][] dataCache;
-
-    private int[] toFetch;
-
 
     /**lower array index of min row from table*/
     private int minDataIndex=0;
@@ -44,9 +41,26 @@ public abstract class CachedTableModel extends AbstractTableModel {
     public CachedTableModel(int cache, @NotNull List<ColumnBehaviour> columns) {
         this.columns = columns;
         this.dataCache = new Object[cache][];
+        this.syncRepeating = new Timer(1000,this::syncOperationEDT);
+        this.toFetch = new int[fetchInitialSize];
     }
 
 
+
+    private int fetchInitialSize = 10;
+    private int fetchTimeOut = 1000;
+
+
+    private int[] toFetch;
+    private int toFetchSize = 0;
+    private int toFetchZero = 0;
+    private boolean fetchFull;
+    private boolean fetchFullFreeze = true;
+
+
+    protected void syncOperationEDT(ActionEvent actionEvent) {
+
+    }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -54,15 +68,35 @@ public abstract class CachedTableModel extends AbstractTableModel {
     }
 
 
+    /**
+     * @param row
+     * @return returns 1 when successfully add index to fetch pull 0  when buffer is fully after added last index, and -1 when is already full and waiting for retrive data
+     */
+    protected int fetchRow(int row){
+        if (this.fetchFull)
+            return -1;
+        int initialSize = this.fetchInitialSize;
+        int size = this.toFetchSize;
+        if (size >= initialSize ) {
+            this.fetchFull = true;
+            return -1;
+        }
+        int zero = this.toFetchZero;
+        int index = size+zero;
+        if (index >= initialSize){
+            index = size -(initialSize-zero);
+        }
+        this.toFetch[index] = row;
+        this.toFetchSize = size+1;
+        if ((size+1) >= initialSize)
+            return 0;
+        return 1;
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex >= this.minRowIndex && rowIndex <= this.maxRowIndex){
-            int index = this.minDataIndex + (this.minRowIndex + rowIndex);
-            if (index > this.rowCountCache) {
-                index = index - this.rowCountCache;
-            }
-            System.out.println("trafiony " + rowIndex);
+        int index = this.cacheIndex(rowIndex);
+        if (index >=0) {
             Object[] data = this.dataCache[index];
             if (data == null) {
                 System.out.println("NULL");
@@ -70,10 +104,21 @@ public abstract class CachedTableModel extends AbstractTableModel {
             }
             return this.dataCache[index][columnIndex];
         }
+        else {
+            int flag = this.fetchRow(rowIndex);
+            System.out.println("fetch flag " + flag);
+            if (flag <= 0){
+                this.fetchFullFreeze = true;
+                SecondaryLoop loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
 
+            }
+            return "fatching";
+        }
+        /*
         int fetchStart;
         int fetchEnd = rowIndex;
         boolean increment;
+
         if (rowIndex > this.maxRowIndex) {
             fetchStart = this.maxRowIndex + 1;
             increment = true;
@@ -124,21 +169,36 @@ public abstract class CachedTableModel extends AbstractTableModel {
             else {
                 System.out.println("DECREMENT");//TODO
             }
+            System.out.println("getting ");
             return this.getWithoutFetching(rowIndex,columnIndex);
         }
-
-        return "ERROR";
+         */
     }
 
+
+
     public Object getWithoutFetching(int row,int column){
-        if (row >= this.minRowIndex && row <= this.maxRowIndex){
-            int index = this.minDataIndex + (this.minRowIndex - row);
+        int index = this.cacheIndex(row);
+        System.out.println("without " + row + " dataindex " + index);
+        if (index >= 0)
+            return this.dataCache[index][column];
+        return null;
+    }
+
+    /***
+     *
+     * @param tableRow
+     * @return -1 if not cached 0>= return <dataCache
+     */
+    public int cacheIndex(int tableRow ) {
+        if (tableRow >= this.minRowIndex && tableRow <= this.maxRowIndex) {
+            int index = this.minDataIndex + (this.minRowIndex - tableRow);
             if (index > this.rowCountCache) {
                 index = index - this.rowCountCache;
             }
-            return this.dataCache[index][column];
+            return index;
         }
-        return null;
+        return -1;
     }
 
     public @NotNull  ColumnBehaviour getBehaviour(int index) {

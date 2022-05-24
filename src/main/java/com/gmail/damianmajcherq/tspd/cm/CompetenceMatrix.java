@@ -133,7 +133,7 @@ public class CompetenceMatrix implements ITSPDModule {
             public boolean fetchData(int lowestRow, int highestRow, @NotNull Object[][] data) {
                 System.out.println("fetch: " + lowestRow + " hig " + highestRow + " size " +data.length);
                 for (int i = 0 ; i < data.length;i++){
-                    data[i] = new Object[]{lowestRow+i};
+                    data[i] = new Object[]{lowestRow};
                 }
                 return true;
             }

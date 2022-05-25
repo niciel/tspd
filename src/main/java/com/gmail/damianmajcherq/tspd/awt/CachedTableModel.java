@@ -6,7 +6,9 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class CachedTableModel extends AbstractTableModel {
 
@@ -42,6 +44,7 @@ public abstract class CachedTableModel extends AbstractTableModel {
         this.columns = columns;
         this.dataCache = new Object[cache][];
         this.syncRepeating = new Timer(1000,this::syncOperationEDT);
+        this.syncRepeating.start();
         this.toFetch = new int[fetchInitialSize];
     }
 
@@ -55,10 +58,13 @@ public abstract class CachedTableModel extends AbstractTableModel {
     private int toFetchSize = 0;
     private int toFetchZero = 0;
     private boolean fetchFull;
-    private boolean fetchFullFreeze = true;
-
 
     protected void syncOperationEDT(ActionEvent actionEvent) {
+        //TODO to remove
+        Rectangle d = view.getViewRect();
+        int row = table.rowAtPoint(new Point(0,d.y));
+        int max = table.rowAtPoint(new Point(0,d.y + d.height-1));
+        System.out.println("dim " + d + " row " + row + " max " + max + " dim ");
 
     }
 
@@ -92,6 +98,9 @@ public abstract class CachedTableModel extends AbstractTableModel {
             return 0;
         return 1;
     }
+    //TODO temporal
+    public JViewport view;
+    public JTable table;
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -106,11 +115,8 @@ public abstract class CachedTableModel extends AbstractTableModel {
         }
         else {
             int flag = this.fetchRow(rowIndex);
-            System.out.println("fetch flag " + flag);
             if (flag <= 0){
-                this.fetchFullFreeze = true;
-                SecondaryLoop loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
-
+                return "preparing";
             }
             return "fatching";
         }

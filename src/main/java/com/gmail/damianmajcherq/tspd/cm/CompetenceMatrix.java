@@ -13,6 +13,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,9 +163,10 @@ public class CompetenceMatrix implements ITSPDModule {
         JScrollPane scroll = new JScrollPane(table);
         return scroll;
         */
-
-
         JScrollPane scroll = new JScrollPane(table);
+        model.table = table;
+        model.view = scroll.getViewport();
+
         return scroll;
     }
 

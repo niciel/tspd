@@ -10,10 +10,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.function.Consumer;
 
+
+//TODO calkiem osobna klasa kontener z JScrool JTable 
 public abstract class CachedTableModel extends AbstractTableModel {
-
-
-
 
     /***
      * first integer begining of copy starts at 0 = first row from copied table
@@ -44,7 +43,6 @@ public abstract class CachedTableModel extends AbstractTableModel {
         this.columns = columns;
         this.dataCache = new Object[cache][];
         this.syncRepeating = new Timer(1000,this::syncOperationEDT);
-        this.syncRepeating.start();
         this.toFetch = new int[fetchInitialSize];
     }
 
@@ -99,8 +97,14 @@ public abstract class CachedTableModel extends AbstractTableModel {
         return 1;
     }
     //TODO temporal
-    public JViewport view;
-    public JTable table;
+
+    private
+    private JViewport view;
+    private JTable table;
+
+    public void init(JScrollPane scroll , JTable table) {
+
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -180,6 +184,7 @@ public abstract class CachedTableModel extends AbstractTableModel {
         }
          */
     }
+
 
 
 

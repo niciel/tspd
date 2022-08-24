@@ -2,21 +2,19 @@ package com.gmail.damianmajcherq.tspd.cm;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
 import com.gmail.damianmajcherq.tspd.MainSystem;
-import com.gmail.damianmajcherq.tspd.awt.CachedJTable;
-import com.gmail.damianmajcherq.tspd.awt.CachedTableModel;
-import com.gmail.damianmajcherq.tspd.awt.ColumnBehaviour;
-import com.gmail.damianmajcherq.tspd.awt.SqlCellRenderer;
-import org.jetbrains.annotations.NotNull;
+import com.gmail.damianmajcherq.tspd.awt.*;
+import com.gmail.damianmajcherq.tspd.awt.cachedList.CachedTable;
+import com.gmail.damianmajcherq.tspd.awt.cachedList.CachedTableModel;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 
 public class CompetenceMatrix implements ITSPDModule {
@@ -126,48 +124,39 @@ public class CompetenceMatrix implements ITSPDModule {
         c.add(scroll);
         this.groupsTable.setFillsViewportHeight(true);
     }
+    public Object[][] callable(){return null;}
 
     protected Container InitTable() {
         List<ColumnBehaviour> list = new ArrayList<ColumnBehaviour>();
         list.add(new ColumnBehaviour("nr",Integer.class));
-        CachedTableModel model = new CachedTableModel(100,list) {
+        CachedTableModel model = new CachedTableModel(list) {
+
+
             @Override
-            public boolean fetchData(int lowestRow, int highestRow, @NotNull Object[][] data) {
-                System.out.println("fetch: " + lowestRow + " hig " + highestRow + " size " +data.length);
-                for (int i = 0 ; i < data.length;i++){
-                    data[i] = new Object[]{lowestRow};
-                }
+            public boolean schedule(FutureTask<Object[][]> task) {
+                SwingUtilities.invokeLater(task);
                 return true;
             }
 
             @Override
-            public int getRowCount() {
-                return 100;
+            public Callable<Object[][]> fetchData(int lowestRow, int count) {
+                return ()->{
+                    Object[][] data = new Object[count][];
+                    for(int i = 0 ;i < count;i++)
+                        data[i] = new Object[]{lowestRow+i};
+                    return data;
+                };
             }
-        };
-        CachedJTable table = new CachedJTable(model);
-        /*
 
-        String[] columns = new String[]{"pierwsza","druga","trzecia"};
-        Object[][] data = new Object[][]{
-                {1,2,3},
-                {4,5,6}
-        };
-        JTable table = new JTable(data,columns) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
+            public int fetchRowCount() {
+                return 250;
             }
+
+
         };
-
-        JScrollPane scroll = new JScrollPane(table);
-        return scroll;
-        */
-        JScrollPane scroll = new JScrollPane(table);
-        model.table = table;
-        model.view = scroll.getViewport();
-
-        return scroll;
+        CachedTable t = new CachedTable(model);
+        return t;
     }
 
 

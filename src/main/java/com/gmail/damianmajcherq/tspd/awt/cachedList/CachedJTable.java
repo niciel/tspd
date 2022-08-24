@@ -1,4 +1,6 @@
-package com.gmail.damianmajcherq.tspd.awt;
+package com.gmail.damianmajcherq.tspd.awt.cachedList;
+
+import com.gmail.damianmajcherq.tspd.awt.ColumnBehaviour;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

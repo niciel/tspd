@@ -1,5 +1,7 @@
 package com.gmail.damianmajcherq.tspd;
 
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
+
 import javax.swing.*;
 import java.sql.*;
 import java.util.function.Consumer;

@@ -1,4 +1,4 @@
-package com.gmail.damianmajcherq.tspd;
+package com.gmail.damianmajcherq.tspd.connection;
 
 public class SqlModule {
 

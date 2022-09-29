@@ -1,6 +1,6 @@
 package com.gmail.damianmajcherq.tspd.production;
 
-import com.gmail.damianmajcherq.tspd.SqLiteManagement;
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -1,7 +1,7 @@
 package com.gmail.damianmajcherq.tspd.employs;
 
-import com.gmail.damianmajcherq.tspd.SqLiteManagement;
-import com.gmail.damianmajcherq.tspd.SqlModule;
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
+import com.gmail.damianmajcherq.tspd.connection.SqlModule;
 
 public class SqlEmploys extends SqlModule {
 

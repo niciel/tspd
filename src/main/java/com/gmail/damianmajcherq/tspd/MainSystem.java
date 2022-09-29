@@ -1,14 +1,13 @@
 package com.gmail.damianmajcherq.tspd;
 
 import com.gmail.damianmajcherq.tspd.cm.CompetenceMatrix;
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
 import com.gmail.damianmajcherq.tspd.production.ProductionModule;
 import com.gmail.damianmajcherq.tspd.tags.TagModule;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MainSystem {

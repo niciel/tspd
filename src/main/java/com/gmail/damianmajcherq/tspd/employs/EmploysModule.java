@@ -2,11 +2,10 @@ package com.gmail.damianmajcherq.tspd.employs;
 
 import com.gmail.damianmajcherq.tspd.ITSPDModule;
 import com.gmail.damianmajcherq.tspd.MainSystem;
-import com.gmail.damianmajcherq.tspd.SqLiteManagement;
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.ref.WeakReference;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;

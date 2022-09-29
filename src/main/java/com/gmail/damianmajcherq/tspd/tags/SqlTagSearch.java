@@ -1,9 +1,8 @@
 package com.gmail.damianmajcherq.tspd.tags;
 
-import com.gmail.damianmajcherq.tspd.SqLiteManagement;
-import com.gmail.damianmajcherq.tspd.SqlModule;
+import com.gmail.damianmajcherq.tspd.connection.SqLiteManagement;
+import com.gmail.damianmajcherq.tspd.connection.SqlModule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;

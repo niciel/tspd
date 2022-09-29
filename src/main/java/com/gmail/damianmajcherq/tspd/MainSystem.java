@@ -25,7 +25,6 @@ public class MainSystem {
     private JMenuBar menuBar;
 
     public MainSystem(){
-        System.out.println();
         this.modules = new ArrayList<>();
         this.modules.add(new SqlMainModule());
         this.modules.add(new CompetenceMatrix());

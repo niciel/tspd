@@ -25,23 +25,6 @@ public class MainLoop {
 
     }
 
-    private MainLoop() {
-
-        System.out.println("execution: " + this.ExecutionFolder);
-
-        SqLiteManagement sql = new SqLiteManagement(this.ExecutionFolder);
-        sql.initSqlDatabase();
-
-        CompetencesSql competencesSql = new CompetencesSql(sql);
-        competencesSql.init();
-
-// :D to zostalo :D
-    }
-
-
-
-
-
 
     protected void initLeftMachinePane(Container main) {
         main.add(new JButton("1"));

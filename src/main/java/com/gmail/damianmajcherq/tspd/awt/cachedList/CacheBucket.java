@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.concurrent.FutureTask;
 
-public class CacheBucket extends SwingWorker<> {
+public class CacheBucket  {
 
     public CacheBucket(@NotNull FutureTask<Object[][]> task, int lowestRowIndex , int count) {
         this.elements = count;

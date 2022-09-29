@@ -85,7 +85,6 @@ public class SqlMainModule implements ITSPDModule {
         JPanel j = new JPanel();
 
 
-
         main.registerTabPane("workers" , j,null);
     }
 }

@@ -3,8 +3,7 @@ package com.gmail.damianmajcherq.tspd.connection;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Collection;
-import java.util.function.Consumer;
+
 
 public class SqLiteManagement {
 
